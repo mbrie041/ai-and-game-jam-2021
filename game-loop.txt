@@ -1,0 +1,36 @@
+Game Summary
+- The player takes on the role of a gaurd positioned outside a midevil town
+- The Players task is to review the stream of people coming in to the town
+- The player can only miss a certain amount of contraband?
+- One the player has missed the maximum amount of contraband, they lose 
+- Once the player reaches and completes the Robin Hood Scenario, they win 
+
+
+Game wide:
+What is the goal of the game?
+- To stop contraband from entering the city
+
+How do you lose the game?
+- When your contraband count gets over 100?
+
+What does a turn sequence look like?
+- Player is prompted to choose from a number of incoming people
+- The player then enters a dialog with the chosen person
+- They have to go back and forth with different text options until they decide wether or not to inspect the persons goods
+- Once inspected, the turn sequence starts anew
+
+
+Scenario wide:
+What is the immediate goal?
+- Each incoming person can have a contraband amount, the player needs to minimize the amount coming in
+
+What tasks need to be achieved?
+- If the player fails to stop the incoming person or fails to find the contraband and they enter the city, the contraband count goes up.
+- If the player successfully stops incoming contraband, they move on to the next Scenario
+
+How long will this take?
+- X number of dialog turns 
+
+What kind of permanent progress has been achieved?
+- The main achievement should be the enjoyment of the player/traveller dialog
+- Everything else is stretch
