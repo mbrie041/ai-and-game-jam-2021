@@ -1,7 +1,10 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "strictNullChecks": true,
+        "noImplicitAny": true,
+        "alwaysStrict": true
     },
     "include": [
         "./src/**/*"
