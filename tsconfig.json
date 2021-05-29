@@ -16,5 +16,9 @@
       "dom",
       "esnext"
     ]
-  }
+  },
+  "exclude": [
+    "pwa",
+    "webpack"
+  ]
 }
