@@ -34,3 +34,36 @@ How long will this take?
 What kind of permanent progress has been achieved?
 - The main achievement should be the enjoyment of the player/traveller dialog
 - Everything else is stretch
+
+Game sequence
+1. Start menu (stretch)
+2. First dialog (Sherif's voice)
+3. Day 1 begins
+
+
+
+Day sequence
+1. Turn sequence lists the visitors and their initial states
+  - Sherry appears at gate and appears frustrated
+2. Player is prompted to choose visitor to inspect
+3. 
+
+Each npc has current state
+Game has options to respond to the state 
+x wants attention
+What ways can you respond to respond to x wanting attention
+list of actions to respond to visitor state
+action sent as an event that the ai sees, ai determines how it responds
+ex:
+- Sherry appears at gate and appears frustrated. Sherry wants attention.
+- player can respond with:
+  1. Talk to Sherry
+  2. Arrest Sherry
+  3. Let Sherry through
+- Sherry responds based on the action:
+  1. Gives you her back story (gives the player options)
+    - Sends an event out determing what actions are available next
+  2. Causes a scene and wastes a bunch of time.
+  3. Thanks you profusely and walks through the gate.
+
+  
