@@ -8,6 +8,7 @@ type StateReport = {
 type StateDetails =
   { name: "ignore" } |
   { name: "dayOver" } |
+  { name: "dayStart" } |
   { name: "wantsAttention" } |
   { name: "gameTime", day: number, minute: number };
 
