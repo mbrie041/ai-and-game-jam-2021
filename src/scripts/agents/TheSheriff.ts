@@ -9,8 +9,9 @@ export default class SheriffStrategy implements AgentStrategy {
       }
     }
   }
+
   tick(): StateDetails[] | undefined {
-    const dialogs = this.messages.map<CharacterDialog>(x => ({ name: "dialog", message: x }));
+    const dialogs = this.messages.map<CharacterDialog>(x => ({ name: "dialog", message: x, action: null }));
     this.messages = []
     return dialogs;
   }

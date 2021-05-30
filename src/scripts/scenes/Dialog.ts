@@ -8,7 +8,8 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
   private avatar: Phaser.GameObjects.Image;
   private title: Phaser.GameObjects.Text;
   private content: Phaser.GameObjects.Text;
-  close: Phaser.GameObjects.Text;
+  private action: Phaser.GameObjects.Text;
+  private close: Phaser.GameObjects.Text;
 
   tell(report: StateReport): void {
     if (report.state.name === "dialog") {
@@ -48,7 +49,15 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
       .text(28, 64, "", {
         ...FontDefaults,
         fontSize: '24px',
-        fixedHeight: 226,
+        wordWrap: { width: 428 }
+      })
+      .setOrigin(0, 0);
+
+    this.action = this.add
+      .text(28, 64, "", {
+        ...FontDefaults,
+        fontSize: '24px',
+        fontStyle: 'italic',
         wordWrap: { width: 428 }
       })
       .setOrigin(0, 0);
@@ -69,7 +78,20 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
     this.close.once("pointerup", () => this.closeDialog());
 
     this.title.setText(next[0].name);
-    this.content.setText(`“${next[1].message}”`)
+
+    if (next[1].message) {
+      this.content.setText(`“${next[1].message}”`);
+      this.action.setY(this.content.y + this.content.height + 10)
+    } else {
+      this.content.setText("");
+      this.action.setY(this.content.y)
+    }
+
+    if (next[1].action) {
+      this.action.setText(`${next[1].action}`);
+    } else {
+      this.action.setText("");
+    }
 
     this.tweens.add({
       targets: this.cameras.main,

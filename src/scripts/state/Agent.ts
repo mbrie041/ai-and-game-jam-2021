@@ -13,7 +13,7 @@ type StateReport = {
 }
 
 type GameTime = { name: "gameTime", day: number, minute: number }
-type CharacterDialog = { name: "dialog", message: string }
+type CharacterDialog = { name: "dialog", message: string | null, action: string | null }
 
 type StateDetails =
   { name: "dayOver" } |
