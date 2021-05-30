@@ -1,4 +1,11 @@
-export { Agent, StateReport as AgentState, AgentStrategy, StateDetails, GameTime };
+export {
+  Agent,
+  StateReport,
+  AgentStrategy,
+  StateDetails,
+  GameTime,
+  CharacterDialog
+};
 
 type StateReport = {
   source: Agent,
@@ -6,12 +13,14 @@ type StateReport = {
 }
 
 type GameTime = { name: "gameTime", day: number, minute: number }
+type CharacterDialog = { name: "dialog", message: string }
 
 type StateDetails =
   { name: "dayOver" } |
-  { name: "dayStart" } |
+  { name: "dayStart", day: number } |
   { name: "wantsAttention" } |
-  GameTime;
+  GameTime |
+  CharacterDialog;
 
 
 interface AgentStrategy {

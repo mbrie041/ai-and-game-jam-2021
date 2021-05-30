@@ -1,19 +1,20 @@
 import Images from "../Images";
-import { AgentState, AgentStrategy, GameTime, StateDetails } from "../state/Agent";
+import { AgentStrategy, GameTime, StateDetails, StateReport } from "../state/Agent";
 
 export default class TimeUi extends Phaser.Scene implements AgentStrategy {
-  private days = ["not-started", "Friday", "Saturday", "Sunday"];
+  private days = ["Friday", "Saturday", "Sunday"];
+  private day = "";
   private animating = false;
 
   timeText: Phaser.GameObjects.Text;
-  tell(report: AgentState): void {
+  tell(report: StateReport): void {
     switch (report.state.name) {
       case "dayStart":
-        this.days.shift();
-        this.timeText.setText(`${this.days[0]}, dawn`);
+        this.day = this.days[report.state.day];
+        this.timeText.setText(`${this.day}, dawn`);
         break;
       case "dayOver":
-        this.timeText.setText(`${this.days[0]}, afternoon`);
+        this.timeText.setText(`${this.day}, afternoon`);
         break;
       case "gameTime":
         this.updateClockTime(report.state);
@@ -53,7 +54,7 @@ export default class TimeUi extends Phaser.Scene implements AgentStrategy {
   private updateClockTime(state: GameTime) {
     const hour = 6 + Math.floor(state.minute / 60);
     const minute = state.minute % 60;
-    this.updateTime(`${this.days[0]}, ${hour}:${minute.toFixed(0).padStart(2, "0")}am`);
+    this.updateTime(`${this.day}, ${hour}:${minute.toFixed(0).padStart(2, "0")}am`);
   }
 
   private updateTime(nextTime: string): void {

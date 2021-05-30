@@ -1,5 +1,5 @@
 import Images from "../Images";
-import { AgentState, AgentStrategy, StateDetails } from "../state/Agent";
+import { AgentStrategy, StateDetails, StateReport } from "../state/Agent";
 
 export default class Background extends Phaser.Scene implements AgentStrategy {
   private state: "wait" | "dayOver" | "dayStart" | "transitioning" = "wait";
@@ -16,7 +16,7 @@ export default class Background extends Phaser.Scene implements AgentStrategy {
       .setOrigin(0, 0);
   }
 
-  tell(report: AgentState): void {
+  tell(report: StateReport): void {
     switch (report.state.name) {
       case "dayOver":
         this.state = "dayOver";
