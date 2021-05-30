@@ -1,4 +1,6 @@
+import SheriffStrategy from "../agents/TheSheriff";
 import Time from "../agents/Time";
+import Images from "../Images";
 import { Agent } from "../state/Agent";
 import Scenario from "../state/Scenario";
 import Background from "./Background";
@@ -21,6 +23,7 @@ export default class Main extends Phaser.Scene {
     this.scenario = new Scenario([
       new Agent("time-keeper", new Time()),
       new Agent("background", background),
+      new Agent("The Sheriff", new SheriffStrategy(), Images.Characters.Sheriff.key),
       new Agent("time-ui", timeUi),
       new Agent("dialog-ui", dialogUi)
     ]);

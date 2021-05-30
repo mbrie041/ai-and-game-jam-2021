@@ -5,17 +5,17 @@ import { AgentStrategy, GameTime, StateDetails, StateReport } from "../state/Age
 export default class TimeUi extends Phaser.Scene implements AgentStrategy {
   private days = ["Friday", "Saturday", "Sunday"];
   private day = "";
-  private animating = false;
+  private pauseGame = false;
 
   timeText: Phaser.GameObjects.Text;
   tell(report: StateReport): void {
     switch (report.state.name) {
       case "dayStart":
         this.day = this.days[report.state.day];
-        this.timeText.setText(`${this.day}, dawn`);
+        this.updateTime(`${this.day}, dawn`);
         break;
       case "dayOver":
-        this.timeText.setText(`${this.day}, afternoon`);
+        this.updateTime(`${this.day}, afternoon`);
         break;
       case "gameTime":
         this.updateClockTime(report.state);
@@ -26,8 +26,9 @@ export default class TimeUi extends Phaser.Scene implements AgentStrategy {
   }
 
   tick(): StateDetails[] | undefined {
-    return this.animating ? undefined : []
+    return this.pauseGame ? undefined : []
   }
+
   create(): void {
     const background = this.add
       .image(this.cameras.main.width, 0, Images.Dialog.NarrowShort.key)
@@ -38,12 +39,7 @@ export default class TimeUi extends Phaser.Scene implements AgentStrategy {
       .setFixedSize(background.width, 0)
       .setOrigin(1, 0.5);
 
-    this.tweens.add({
-      targets: this.cameras.main,
-      y: { from: -100, to: 0 },
-      duration: 1000,
-      ease: Phaser.Math.Easing.Bounce.Out,
-    })
+    this.cameras.main.y = -100;
   }
 
   private updateClockTime(state: GameTime) {
@@ -53,7 +49,12 @@ export default class TimeUi extends Phaser.Scene implements AgentStrategy {
   }
 
   private updateTime(nextTime: string): void {
-    this.animating = true;
+    if (this.cameras.main.y < 0) {
+      this.showNextTime(nextTime)
+      return;
+    }
+
+    this.pauseGame = true;
     this.tweens.add({
       targets: this.cameras.main,
       y: { from: 0, to: -100 },
@@ -64,13 +65,13 @@ export default class TimeUi extends Phaser.Scene implements AgentStrategy {
   }
 
   showNextTime(nextTime: string): void {
+    this.pauseGame = false;
     this.timeText.setText(nextTime);
     this.tweens.add({
       targets: this.cameras.main,
       y: { from: -100, to: 0 },
       duration: 500,
-      ease: Phaser.Math.Easing.Bounce.Out,
-      onComplete: () => this.animating = false
+      ease: Phaser.Math.Easing.Bounce.Out
     })
   }
 }

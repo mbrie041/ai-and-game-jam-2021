@@ -36,7 +36,7 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
       .setOrigin(0, 0);
 
     this.title = this.add
-      .text(58, 24, "Heloow there!", { ...FontDefaults, fontStyle: 'bold' })
+      .text(58, 24, "", { ...FontDefaults, fontStyle: 'bold' })
       .setOrigin(0, 0);
 
     this.close = this.add
@@ -45,7 +45,7 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
       .setOrigin(0, 0);
 
     this.content = this.add
-      .text(28, 64, "the quick brown fox jumped over".repeat(20), {
+      .text(28, 64, "", {
         ...FontDefaults,
         fontSize: '24px',
         fixedHeight: 226,
@@ -54,7 +54,7 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
       .setOrigin(0, 0);
 
     this.avatar = this.add
-      .image(0, 0, "")
+      .image(0, 4, "")
       .setOrigin(0, 0)
       .setScale(0.5);
 
@@ -63,9 +63,14 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
 
 
   showDialog(next: [agent: Agent, dialog: CharacterDialog]): void {
+    this.isShowingDialog = true;
     this.avatar.setTexture(next[0].icon ?? "");
     this.avatar.visible = next[0].icon !== null;
     this.close.once("pointerdown", () => this.closeDialog());
+
+    this.title.setText(next[0].name);
+    this.content.setText(`“${next[1].message}”`)
+
     this.tweens.add({
       targets: this.cameras.main,
       y: { from: -500, to: 0 },
@@ -79,7 +84,7 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
       targets: this.cameras.main,
       y: { from: 0, to: -500 },
       duration: 300,
-      ease: Phaser.Math.Easing.Bounce.In,
+      ease: Phaser.Math.Easing.Quadratic.Out,
       onComplete: () => this.isShowingDialog = false
     })
   }

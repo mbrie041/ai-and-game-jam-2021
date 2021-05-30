@@ -6,6 +6,9 @@ const Images = {
   Dialog: {
     NarrowShort: { key: "dialog_narrow_short", url: "assets/images/dialog-narrow-short.png" },
     WideTall: { key: "dialog_wide_tall", url: "assets/images/dialog-wide-tall.png" }
+  },
+  Characters: {
+    Sheriff: { key: "npc_sheriff", url: "assets/images/npc-sheriff.png" }
   }
 }
 
