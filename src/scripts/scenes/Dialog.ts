@@ -1,5 +1,5 @@
 import Images from "../Images";
-import { FontDefaults } from "../Fonts";
+import { ClickCursor, FontDefaults, Interactive } from "../Styles";
 import { Agent, AgentStrategy, CharacterDialog, StateDetails, StateReport } from "../state/Agent";
 
 export default class Dialog extends Phaser.Scene implements AgentStrategy {
@@ -40,8 +40,8 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
       .setOrigin(0, 0);
 
     this.close = this.add
-      .text(434, 24, "✗", { ...FontDefaults, fontStyle: 'bold' })
-      .setInteractive()
+      .text(428, 20, " ✗ ", Interactive)
+      .setInteractive(ClickCursor)
       .setOrigin(0, 0);
 
     this.content = this.add
@@ -66,7 +66,7 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
     this.isShowingDialog = true;
     this.avatar.setTexture(next[0].icon ?? "");
     this.avatar.visible = next[0].icon !== null;
-    this.close.once("pointerdown", () => this.closeDialog());
+    this.close.once("pointerup", () => this.closeDialog());
 
     this.title.setText(next[0].name);
     this.content.setText(`“${next[1].message}”`)

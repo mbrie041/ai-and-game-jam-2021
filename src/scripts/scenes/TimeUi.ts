@@ -1,4 +1,4 @@
-import { FontDefaults } from "../Fonts";
+import { FontDefaults } from "../Styles";
 import Images from "../Images";
 import { AgentStrategy, GameTime, StateDetails, StateReport } from "../state/Agent";
 

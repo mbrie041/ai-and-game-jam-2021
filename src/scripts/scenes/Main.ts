@@ -16,6 +16,7 @@ export default class Main extends Phaser.Scene {
   }
 
   create(): void {
+    this.input.setDefaultCursor('url(assets/images/cursor-neutral.png), pointer');
     const background = this.scene.add("background", Background, true) as Background;
     const timeUi = this.scene.add("time-ui", TimeUi, true) as TimeUi;
     const dialogUi = this.scene.add("dialog-ui", Dialog, true) as Dialog;
