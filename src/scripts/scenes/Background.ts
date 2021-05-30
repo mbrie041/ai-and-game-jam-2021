@@ -31,7 +31,7 @@ export default class Background extends Phaser.Scene implements AgentStrategy {
     }
   }
 
-  tick(): StateDetails | undefined {
+  tick(): StateDetails[] | undefined {
     switch (this.state) {
       case "dayOver":
         this.startEndDayTransition();
@@ -42,7 +42,7 @@ export default class Background extends Phaser.Scene implements AgentStrategy {
       case "transitioning":
         return undefined;
       case "wait":
-        return { name: "ignore" };
+        return [];
     }
   }
 

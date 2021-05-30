@@ -1,16 +1,17 @@
-export { Agent, StateReport as AgentState, AgentStrategy, StateDetails };
+export { Agent, StateReport as AgentState, AgentStrategy, StateDetails, GameTime };
 
 type StateReport = {
   source: Agent,
   state: StateDetails
 }
 
+type GameTime = { name: "gameTime", day: number, minute: number }
+
 type StateDetails =
-  { name: "ignore" } |
   { name: "dayOver" } |
   { name: "dayStart" } |
   { name: "wantsAttention" } |
-  { name: "gameTime", day: number, minute: number };
+  GameTime;
 
 
 interface AgentStrategy {
@@ -22,7 +23,7 @@ interface AgentStrategy {
    * return undefined. This will be used for interactive agents (ie. player, transition causing
    * agents).
    * */
-  tick(): StateDetails | undefined;
+  tick(): StateDetails[] | undefined;
 }
 
 /**
@@ -42,7 +43,7 @@ class Agent {
     this.strategy.tell(state);
   }
 
-  tick(): StateDetails | undefined {
+  tick(): StateDetails[] | undefined {
     return this.strategy.tick();
   }
 }

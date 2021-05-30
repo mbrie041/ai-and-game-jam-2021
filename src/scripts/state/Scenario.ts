@@ -17,13 +17,15 @@ export default class Scenario {
    */
   update(): boolean {
     const toUpdate = this.agents[this.nextToUpdate];
-    const newState = toUpdate.tick();
-    if (newState === undefined) {
+    const newStates = toUpdate.tick();
+    if (newStates === undefined) {
       return false;
     }
 
-    for (const agent of this.agents) {
-      agent.tell({ source: toUpdate, state: newState });
+    for (const newState of newStates) {
+      for (const agent of this.agents) {
+        agent.tell({ source: toUpdate, state: newState });
+      }
     }
 
     // Move to next index to update.

@@ -8,10 +8,10 @@ export default class Time implements AgentStrategy {
   tell(report: AgentState): void {
     // TODO advance time based on observed actions
   }
-  tick(): StateDetails | undefined {
+  tick(): StateDetails[] | undefined {
     if (!this.startedDay) {
       this.startedDay = true;
-      return { name: "dayStart" }
+      return [{ name: "dayStart" }]
 
     }
     this.minute++;
@@ -20,10 +20,10 @@ export default class Time implements AgentStrategy {
       this.minute = 0;
       this.startedDay = false;
 
-      return { name: "dayOver" }
+      return [{ name: "dayOver" }]
     }
 
-    return { name: "gameTime", day: this.day, minute: this.minute };
+    return [{ name: "gameTime", day: this.day, minute: this.minute }];
   }
 
 }

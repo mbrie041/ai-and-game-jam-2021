@@ -13,6 +13,7 @@ export default class Boot extends Phaser.Scene {
   preload(): void {
     this.load.image(Images.Market.Dark);
     this.load.image(Images.Market.Light);
+    this.load.image(Images.Dialog.NarrowShort);
 
     this.createProgressIndicator();
   }
