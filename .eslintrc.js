@@ -14,6 +14,6 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
   ],
   rules: {
-    "indent": ["error", 2]
+    "indent": ["error", 2, { "SwitchCase": 1 }]
   }
 };

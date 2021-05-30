@@ -1,13 +1,27 @@
-import Images from "../Images";
+import Time from "../agents/Time";
+import { Agent } from "../state/Agent";
+import Scenario from "../state/Scenario";
+import Background from "./Background";
 
 export default class Main extends Phaser.Scene {
-  nightBackground: Phaser.GameObjects.Image;
+
+  private scenario: Scenario;
+
   constructor() {
     super({ key: Main.name });
   }
 
   create(): void {
-    const dayBackground = this.add.image(0, 0, Images.Market.Light.key).setOrigin(0, 0);
-    this.nightBackground = this.add.image(0, 0, Images.Market.Dark.key).setOrigin(0, 0);
+    const background = this.scene.add("background", Background, true) as Background;
+
+    this.scenario = new Scenario([
+      new Agent("background", background),
+      new Agent("time-keeper", new Time())
+    ]);
+  }
+
+  update(): void {
+    this.scenario.update()
   }
 }
+
