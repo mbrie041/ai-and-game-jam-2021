@@ -1,3 +1,4 @@
+import { FontDefaults } from "../Fonts";
 import Images from "../Images";
 import { AgentStrategy, GameTime, StateDetails, StateReport } from "../state/Agent";
 
@@ -32,14 +33,8 @@ export default class TimeUi extends Phaser.Scene implements AgentStrategy {
       .image(this.cameras.main.width, 0, Images.Dialog.NarrowShort.key)
       .setOrigin(1, 0);
 
-    const fontSettings = {
-      fontFamily: 'Garamond',
-      fontSize: '28px',
-      color: '#000'
-    };
-
     this.timeText = this.add
-      .text(background.x + 30, background.y + background.height / 2 - 4, "", fontSettings)
+      .text(background.x + 30, background.y + background.height / 2 - 4, "", FontDefaults)
       .setFixedSize(background.width, 0)
       .setOrigin(1, 0.5);
 
@@ -62,7 +57,7 @@ export default class TimeUi extends Phaser.Scene implements AgentStrategy {
     this.tweens.add({
       targets: this.cameras.main,
       y: { from: 0, to: -100 },
-      duration: 500,
+      duration: 300,
       ease: Phaser.Math.Easing.Bounce.In,
       onComplete: () => this.showNextTime(nextTime)
     })
@@ -72,7 +67,7 @@ export default class TimeUi extends Phaser.Scene implements AgentStrategy {
     this.timeText.setText(nextTime);
     this.tweens.add({
       targets: this.cameras.main,
-      y: { from: -100, to: -0 },
+      y: { from: -100, to: 0 },
       duration: 500,
       ease: Phaser.Math.Easing.Bounce.Out,
       onComplete: () => this.animating = false

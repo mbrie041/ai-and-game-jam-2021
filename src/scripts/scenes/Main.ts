@@ -2,6 +2,7 @@ import Time from "../agents/Time";
 import { Agent } from "../state/Agent";
 import Scenario from "../state/Scenario";
 import Background from "./Background";
+import Dialog from "./Dialog";
 import TimeUi from "./TimeUi";
 
 export default class Main extends Phaser.Scene {
@@ -15,11 +16,13 @@ export default class Main extends Phaser.Scene {
   create(): void {
     const background = this.scene.add("background", Background, true) as Background;
     const timeUi = this.scene.add("time-ui", TimeUi, true) as TimeUi;
+    const dialogUi = this.scene.add("dialog-ui", Dialog, true) as Dialog;
 
     this.scenario = new Scenario([
       new Agent("time-keeper", new Time()),
       new Agent("background", background),
-      new Agent("time-ui", timeUi)
+      new Agent("time-ui", timeUi),
+      new Agent("dialog-ui", dialogUi)
     ]);
   }
 

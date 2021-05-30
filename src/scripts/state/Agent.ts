@@ -40,11 +40,13 @@ interface AgentStrategy {
  * updater. Most of an agent's behaviour is delegated to its strategy implementation.
  */
 class Agent {
+  readonly icon: string | null;
   readonly name: string;
   private readonly strategy: AgentStrategy;
 
-  constructor(name: string, strategy: AgentStrategy) {
+  constructor(name: string, strategy: AgentStrategy, icon?: string) {
     this.name = name;
+    this.icon = icon ?? null;
     this.strategy = strategy;
   }
 
