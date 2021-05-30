@@ -6,19 +6,15 @@ export default class TimeUi extends Phaser.Scene implements AgentStrategy {
   private days = ["Friday", "Saturday", "Sunday"];
   private day = "";
   private pauseGame = false;
+  private nextAction: StateDetails | undefined;
 
   timeText: Phaser.GameObjects.Text;
   tell(report: StateReport): void {
     switch (report.state.name) {
       case "dayStart":
-        this.day = this.days[report.state.day];
-        this.updateTime(`${this.day}, dawn`);
-        break;
       case "dayOver":
-        this.updateTime(`${this.day}, afternoon`);
-        break;
       case "gameTime":
-        this.updateClockTime(report.state);
+        this.nextAction = report.state;
         break;
       default:
         break;
@@ -26,6 +22,23 @@ export default class TimeUi extends Phaser.Scene implements AgentStrategy {
   }
 
   tick(): StateDetails[] | undefined {
+    if (this.nextAction) {
+      switch (this.nextAction.name) {
+        case "dayStart":
+          this.day = this.days[this.nextAction.day];
+          this.updateTime(`${this.day}, dawn`);
+          break;
+        case "dayOver":
+          this.updateTime(`${this.day}, afternoon`);
+          break;
+        case "gameTime":
+          this.updateClockTime(this.nextAction);
+          break;
+        default:
+          break;
+      }
+      this.nextAction = undefined;
+    }
     return this.pauseGame ? undefined : []
   }
 
