@@ -1,0 +1,26 @@
+Vanilla-visitor
+Andrew - Tax collector
+Steve - Groom
+Justin - Artisan
+Barry - Tinker
+
+Outlaws
+Evan - Stonemason
+Jon - Winemaker
+Mike - Blacksmith
+
+Andrew - Tax collector 
+Initial state
+- Outraged that you would delay him 
+
+1st talk option
+- Andrew bellows at you that he is a collector for the NTA (Nottingham Tax Association) and that you are costing the region valuable dollars by delaying him. If you continue, he demands recompense equal to his hourly wages.
+
+2nd talk option
+- Andrew demands to speak to your superior. While yelling, your superior comes over and confirms that Andrew is in fact a tax collector. He tells you not to waste anymore time and to let Andrew pass. 
+
+Arrest option
+- Andrew belows that this is ridiculous and demands to speak to your superior. While arresting Andrew, your superior comes over and confirms that Andrew is in fact a tax collector. He scolds you and reminds you not to arrest the innocent. He lets Andrew pass.
+
+Let pass option
+- Andrew thanks you politely and saunters through. 
