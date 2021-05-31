@@ -7,7 +7,8 @@ export {
   CharacterDialog,
   Waiting,
   ContextlessAction,
-  ContextSpecificAction
+  ContextSpecificAction,
+  ContextlessOption
 };
 
 type StateReport = {
@@ -25,8 +26,10 @@ type CharacterDialog = { name: "dialog", message: string | null, action: string 
 type ContextlessAction = {
   name: "contextlessAction",
   target: Agent,
-  action: "letThrough" | "arrest" | "chat"
+  action: ContextlessOption
 }
+
+type ContextlessOption = "Let Pass" | "Arrest" | "Chat" | "Search";
 
 
 /** 

@@ -1,7 +1,8 @@
 import Images from "../Images";
-import { Agent, AgentStrategy, StateDetails, StateReport, Waiting } from "../state/Agent";
+import { Agent, AgentStrategy, ContextlessOption, StateDetails, StateReport, Waiting } from "../state/Agent";
 import { ClickCursor, FontDefaults, Interactive } from "../Styles";
 
+const contextlessOptions: ContextlessOption[] = ["Chat", "Let Pass", "Search", "Arrest"];
 export default class PlayerInterface extends Phaser.Scene implements AgentStrategy {
   private nextAction: StateDetails | undefined;
   private currentlyWaiting: (Waiting & { agent: Agent })[] = [];
@@ -124,7 +125,7 @@ export default class PlayerInterface extends Phaser.Scene implements AgentStrate
     this.visitorContent.setText(item.appearance);
 
     let x = 28;
-    const y = 240;
+    let y = 240;
 
     for (const option of item.actions) {
       const text = this.add
@@ -138,7 +139,24 @@ export default class PlayerInterface extends Phaser.Scene implements AgentStrate
         .on(Phaser.Input.Events.POINTER_DOWN, () => this.actionSelected({ name: "contextAction", target: item.agent, ...option }));
       this.visitorTextboxes.push(text);
       this.visitorDetailsContainer.add(text);
-      x += text.width + 16;
+      x += text.width + 24;
+    }
+
+    y = 280;
+    x = 28;
+    for (const option of contextlessOptions) {
+      const text = this.add
+        .text(x, y, option, {
+          ...Interactive,
+          fontSize: '24px',
+          fontStyle: 'small-caps'
+        })
+        .setOrigin(0, 0)
+        .setInteractive(ClickCursor)
+        .on(Phaser.Input.Events.POINTER_DOWN, () => this.actionSelected({ name: "contextlessAction", target: item.agent, action: option }));
+      this.visitorTextboxes.push(text);
+      this.visitorDetailsContainer.add(text);
+      x += text.width + 24;
     }
 
     this.tweens.add({
