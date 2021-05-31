@@ -6,7 +6,11 @@ export default class TaxCollector implements AgentStrategy {
   }
 
   tick(): StateDetails[] | undefined {
-    return [{ name: "waiting", appearance: "", actions: [] }]
+    return [{
+      name: "waiting",
+      appearance: "",
+      actions: [{ name: "contextAction", source: this, label: "Test", action: "foo" }]
+    }]
   }
 
 }

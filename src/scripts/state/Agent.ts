@@ -25,7 +25,8 @@ type CharacterDialog = { name: "dialog", message: string | null, action: string 
  * used to encode those actions. */
 type ContextSpecificAction = {
   name: "contextAction",
-  target: Agent,
+  source: AgentStrategy,
+  label: string,
   action: string
 }
 
@@ -45,7 +46,8 @@ type StateDetails =
   { name: "dayStart", day: number } |
   Waiting |
   GameTime |
-  CharacterDialog;
+  CharacterDialog |
+  ContextSpecificAction;
 
 
 interface AgentStrategy {
