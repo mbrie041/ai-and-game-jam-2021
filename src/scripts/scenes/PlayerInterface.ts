@@ -1,5 +1,5 @@
 import Images from "../Images";
-import { Agent, AgentStrategy, ContextSpecificAction, StateDetails, StateReport, Waiting } from "../state/Agent";
+import { Agent, AgentStrategy, StateDetails, StateReport, Waiting } from "../state/Agent";
 import { ClickCursor, FontDefaults, Interactive } from "../Styles";
 
 export default class PlayerInterface extends Phaser.Scene implements AgentStrategy {

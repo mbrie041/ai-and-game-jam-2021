@@ -6,6 +6,7 @@ export {
   GameTime,
   CharacterDialog,
   Waiting,
+  ContextlessAction,
   ContextSpecificAction
 };
 
@@ -20,12 +21,20 @@ type GameTime = { name: "gameTime", day: number, minute: number }
 /** An event to show a speech/action dialog. */
 type CharacterDialog = { name: "dialog", message: string | null, action: string | null }
 
+/** Actions that can always be applied to an NPC. */
+type ContextlessAction = {
+  name: "contextlessAction",
+  target: Agent,
+  action: "letThrough" | "arrest" | "chat"
+}
+
+
 /** 
  * Some NPC agents may offer specific actions for the player to perform. This type is 
  * used to encode those actions. */
 type ContextSpecificAction = {
   name: "contextAction",
-  source: AgentStrategy,
+  target: Agent,
   label: string,
   action: string
 }
@@ -47,19 +56,20 @@ type StateDetails =
   Waiting |
   GameTime |
   CharacterDialog |
+  ContextlessAction |
   ContextSpecificAction;
 
 
 interface AgentStrategy {
   /** Informs the strategy of an event that occurred. */
-  tell(report: StateReport): void;
+  tell(report: StateReport, thisAgent: Agent): void;
 
   /** 
    * Act upon events received since the last tick. If the agent cannot act yet, this method will
    * return undefined. This will be used for interactive agents (ie. player, transition causing
    * agents).
    * */
-  tick(): StateDetails[] | undefined;
+  tick(thisAgent: Agent): StateDetails[] | undefined;
 }
 
 /**
@@ -78,10 +88,10 @@ class Agent {
   }
 
   tell(state: StateReport): void {
-    this.strategy.tell(state);
+    this.strategy.tell(state, this);
   }
 
   tick(): StateDetails[] | undefined {
-    return this.strategy.tick();
+    return this.strategy.tick(this);
   }
 }
