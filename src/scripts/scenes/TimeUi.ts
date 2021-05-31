@@ -71,8 +71,8 @@ export default class TimeUi extends Phaser.Scene implements AgentStrategy {
     this.tweens.add({
       targets: this.cameras.main,
       y: { from: 0, to: -100 },
-      duration: 300,
-      ease: Phaser.Math.Easing.Bounce.In,
+      duration: 200,
+      ease: Phaser.Math.Easing.Back.In,
       onComplete: () => this.showNextTime(nextTime)
     })
   }
@@ -83,8 +83,8 @@ export default class TimeUi extends Phaser.Scene implements AgentStrategy {
     this.tweens.add({
       targets: this.cameras.main,
       y: { from: -100, to: 0 },
-      duration: 800,
-      ease: Phaser.Math.Easing.Bounce.Out
+      duration: 300,
+      ease: Phaser.Math.Easing.Back.Out
     })
   }
 }

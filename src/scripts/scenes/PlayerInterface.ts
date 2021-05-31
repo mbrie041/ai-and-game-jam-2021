@@ -46,10 +46,10 @@ export default class PlayerInterface extends Phaser.Scene implements AgentStrate
 
   create(): void {
     this.waiterBox = this.add
-      .image(500 + this.cameras.main.width, 80, Images.Dialog.NarrowTall.key)
-      .setOrigin(1, 0);
+      .image(0, -500, Images.Dialog.NarrowTall.key)
+      .setOrigin(0, 0);
     this.waiterTitle = this.add
-      .text(500 + this.cameras.main.width - 304, 100, "Waiting", { ...FontDefaults, fontStyle: 'bold' })
+      .text(28, 24 - 500, "Waiting", { ...FontDefaults, fontStyle: 'bold' })
       .setOrigin(0, 0);
 
     this.visitorAvatar = this.add
@@ -67,7 +67,7 @@ export default class PlayerInterface extends Phaser.Scene implements AgentStrate
       })
       .setOrigin(0, 0);
 
-    this.visitorDetailsContainer = this.add.container(-500, 0);
+    this.visitorDetailsContainer = this.add.container(0, 800);
     this.visitorDetailsContainer.add(this.add
       .image(0, 0, Images.Dialog.WideTall.key)
       .setOrigin(0, 0))
@@ -78,8 +78,8 @@ export default class PlayerInterface extends Phaser.Scene implements AgentStrate
 
   showList(): void {
     this.isShowingList = true;
-    const x = 500 + this.cameras.main.width - 304;
-    let y = 136;
+    const x = 28;
+    let y = 56 - 500;
 
     for (const item of this.currentlyWaiting) {
       const text = this.add
@@ -93,19 +93,19 @@ export default class PlayerInterface extends Phaser.Scene implements AgentStrate
 
     this.tweens.add({
       targets: [...this.waiterTextboxes, this.waiterBox, this.waiterTitle],
-      x: '+=-500',
-      duration: 800,
-      ease: Phaser.Math.Easing.Bounce.Out
+      y: '+=500',
+      duration: 300,
+      ease: Phaser.Math.Easing.Back.Out
     })
   }
 
   clicked(item: Waiting & { agent: Agent; }): void {
-    if (this.visitorDetailsContainer.x >= 0) {
+    if (this.visitorDetailsContainer.y < this.cameras.main.height) {
       this.tweens.add({
         targets: this.visitorDetailsContainer,
-        x: { from: 0, to: -500 },
-        duration: 300,
-        ease: Phaser.Math.Easing.Quadratic.Out,
+        y: { from: 388, to: 800 },
+        duration: 200,
+        ease: Phaser.Math.Easing.Back.In,
         onComplete: () => this.clicked(item)
       })
       return;
@@ -143,9 +143,9 @@ export default class PlayerInterface extends Phaser.Scene implements AgentStrate
 
     this.tweens.add({
       targets: this.visitorDetailsContainer,
-      x: { from: -500, to: 0 },
-      duration: 800,
-      ease: Phaser.Math.Easing.Bounce.Out
+      y: { from: 800, to: 388 },
+      duration: 300,
+      ease: Phaser.Math.Easing.Back.Out
     })
   }
 
@@ -154,15 +154,15 @@ export default class PlayerInterface extends Phaser.Scene implements AgentStrate
 
     this.tweens.add({
       targets: this.visitorDetailsContainer,
-      x: { from: 0, to: -500 },
-      duration: 300,
-      ease: Phaser.Math.Easing.Quadratic.Out
+      y: { from: 388, to: 800 },
+      duration: 200,
+      ease: Phaser.Math.Easing.Back.In
     })
     this.tweens.add({
       targets: [...this.waiterTextboxes, this.waiterBox, this.waiterTitle],
-      x: '+=500',
-      duration: 300,
-      ease: Phaser.Math.Easing.Quadratic.Out,
+      y: '+=-500',
+      duration: 200,
+      ease: Phaser.Math.Easing.Back.In,
       onComplete: () => this.cleanUpList()
     })
   }

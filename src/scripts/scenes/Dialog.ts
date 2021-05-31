@@ -96,8 +96,8 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
     this.tweens.add({
       targets: this.cameras.main,
       y: { from: -500, to: 0 },
-      duration: 800,
-      ease: Phaser.Math.Easing.Bounce.Out
+      duration: 300,
+      ease: Phaser.Math.Easing.Back.Out
     })
   }
 
@@ -105,8 +105,8 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
     this.tweens.add({
       targets: this.cameras.main,
       y: { from: 0, to: -500 },
-      duration: 300,
-      ease: Phaser.Math.Easing.Quadratic.Out,
+      duration: 200,
+      ease: Phaser.Math.Easing.Back.In,
       onComplete: () => this.isShowingDialog = false
     })
   }
