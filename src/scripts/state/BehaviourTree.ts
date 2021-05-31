@@ -1,14 +1,15 @@
-import { StateReport } from "./Agent"
+import { StateDetails } from "./Agent"
 
 export {
   inParallelUntilAny,
   loop,
   selector,
   sequence,
-  tell
+  tell,
+  waitFor
 }
 
-type BTree = Generator<StateReport[], ["succeed" | "fail", StateReport[]]>
+type BTree = Generator<StateDetails[], ["succeed" | "fail", StateDetails[]]>
 
 function* loop(toLoop: () => BTree): BTree {
   while (true) {
@@ -19,15 +20,16 @@ function* loop(toLoop: () => BTree): BTree {
 
 function* inParallelUntilAny(...trees: BTree[]): BTree {
   while (true) {
-    const reports: StateReport[] = [];
+    let reports: StateDetails[] = [];
 
     for (const tree of trees) {
       const result = tree.next();
+
+      // If an item is done, only report that result.
       if (result.done) {
-        reports.concat(result.value[1]);
-        return [result.value[0], reports];
+        return result.value;
       } else {
-        reports.concat(result.value);
+        reports = reports.concat(result.value);
       }
     }
 
@@ -76,6 +78,14 @@ function* selector(...trees: BTree[]): BTree {
 }
 
 // eslint-disable-next-line require-yield
-function* tell(tell: [StateReport]): BTree {
+function* tell(tell: StateDetails[]): BTree {
   return ["succeed", tell];
+}
+
+function* waitFor(condition: () => boolean, subTree: BTree): BTree {
+  while (!condition()) {
+    yield [];
+  }
+
+  return yield* subTree;
 }

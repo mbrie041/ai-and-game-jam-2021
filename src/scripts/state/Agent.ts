@@ -47,7 +47,7 @@ type Waiting = {
   appearance: string
 
   /** a list of 0 or more context specific actions, in addition to standard actions. */
-  actions: ContextSpecificAction[]
+  actions: { label: string, action: string }[]
 }
 
 type StateDetails =

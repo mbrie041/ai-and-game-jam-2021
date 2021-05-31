@@ -135,7 +135,7 @@ export default class PlayerInterface extends Phaser.Scene implements AgentStrate
         })
         .setOrigin(0, 0)
         .setInteractive(ClickCursor)
-        .on(Phaser.Input.Events.POINTER_DOWN, () => this.actionSelected(option));
+        .on(Phaser.Input.Events.POINTER_DOWN, () => this.actionSelected({ name: "contextAction", target: item.agent, ...option }));
       this.visitorTextboxes.push(text);
       this.visitorDetailsContainer.add(text);
       x += text.width + 16;
