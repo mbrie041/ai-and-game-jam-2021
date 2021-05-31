@@ -54,9 +54,8 @@ export default class PlayerInterface extends Phaser.Scene implements AgentStrate
       .setOrigin(0, 0);
 
     this.visitorAvatar = this.add
-      .image(0, 4, "")
-      .setOrigin(0, 0)
-      .setScale(0.5);
+      .image(0, 2, "")
+      .setOrigin(0, 0);
     this.visitorTitle = this.add
       .text(58, 24, "", { ...FontDefaults, fontStyle: 'bold' })
       .setOrigin(0, 0);
@@ -118,8 +117,10 @@ export default class PlayerInterface extends Phaser.Scene implements AgentStrate
     }
 
     // Set up the dialog.
-    this.visitorAvatar.setTexture(item.agent.icon ?? "");
-    this.visitorAvatar.visible = item.agent.icon !== null;
+    this.visitorAvatar
+      .setTexture(item.agent.icon ?? "")
+      .setVisible(item.agent.icon !== null)
+      .setDisplaySize(60, 60);
 
     this.visitorTitle.setText(item.agent.name);
     this.visitorContent.setText(item.appearance);

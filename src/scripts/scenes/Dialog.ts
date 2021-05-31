@@ -63,9 +63,8 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
       .setOrigin(0, 0);
 
     this.avatar = this.add
-      .image(0, 4, "")
-      .setOrigin(0, 0)
-      .setScale(0.5);
+      .image(0, 2, "")
+      .setOrigin(0, 0);
 
     this.cameras.main.y = -500;
   }
@@ -75,6 +74,7 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
     this.isShowingDialog = true;
     this.avatar.setTexture(next[0].icon ?? "");
     this.avatar.visible = next[0].icon !== null;
+    this.avatar.setDisplaySize(60, 60);
     this.close.once(Phaser.Input.Events.POINTER_DOWN, () => this.closeDialog());
 
     this.title.setText(next[0].name);

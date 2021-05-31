@@ -28,7 +28,7 @@ export default class Main extends Phaser.Scene {
       new Agent("time-keeper", new Time()),
       new Agent("background", background),
       new Agent("The Sheriff", new SheriffStrategy(), Images.Characters.Sheriff.key),
-      new Agent("Andrew, the tax man", new TaxCollector()),
+      new Agent("Andrew, the tax man", new TaxCollector(), Images.Characters.TaxCollector.key),
       new Agent("time-ui", timeUi),
       new Agent("dialog-ui", dialogUi),
       new Agent("player-ui", playerUi)
