@@ -11,8 +11,13 @@ export default class Boot extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.image(Images.Market.Dark);
-    this.load.image(Images.Market.Light);
+    // Resurse through images groups to load all images.
+    for (const group in Images) {
+      for (const item in Images[group]) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        this.load.image(Images[group][item]);
+      }
+    }
 
     this.createProgressIndicator();
   }
