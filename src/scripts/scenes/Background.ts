@@ -1,8 +1,8 @@
 import Images from "../Images";
-import { AgentState, AgentStrategy, StateDetails } from "../state/Agent";
+import { AgentStrategy, StateDetails, StateReport } from "../state/Agent";
 
 export default class Background extends Phaser.Scene implements AgentStrategy {
-  private state: "day" | "waiting" | "transitioning" = "day";
+  private state: "wait" | "dayOver" | "dayStart" | "transitioning" = "wait";
   private transitionOverlay: Phaser.GameObjects.Rectangle;
   private gameTime: { day: number; minute: number; } | undefined;
   private nightBackground: Phaser.GameObjects.Image;
@@ -14,44 +14,58 @@ export default class Background extends Phaser.Scene implements AgentStrategy {
     this.transitionOverlay = this.add
       .rectangle(0, 0, this.nightBackground.width, this.nightBackground.height, 0x000000)
       .setOrigin(0, 0);
-
-    this.tweens.add({
-      targets: this.transitionOverlay,
-      alpha: { from: 1, to: 0 },
-      ease: "Sin.easeOut",
-      duration: 1000
-    })
   }
 
-  tell(report: AgentState): void {
-    if (report.state.name === "dayOver") {
-      this.state = "waiting";
-    } else if (report.state.name === "gameTime") {
-      this.nightBackground.alpha =
-        1 - Phaser.Math.Easing.Quadratic.InOut(Math.min(60, report.state.minute) / 60);
+  tell(report: StateReport): void {
+    switch (report.state.name) {
+      case "dayOver":
+        this.state = "dayOver";
+        break;
+      case "dayStart":
+        this.state = "dayStart";
+        break;
+      case "gameTime":
+        this.nightBackground.alpha =
+          1 - Phaser.Math.Easing.Quadratic.InOut(Math.min(60, report.state.minute) / 60);
+        break;
     }
   }
 
-  tick(): StateDetails | undefined {
-    if (this.state === "waiting") {
-      this.startNextDayTransition();
-      this.state = "transitioning";
+  tick(): StateDetails[] | undefined {
+    switch (this.state) {
+      case "dayOver":
+        this.startEndDayTransition();
+        return undefined;
+      case "dayStart":
+        this.startStartDayTransition();
+        return undefined;
+      case "transitioning":
+        return undefined;
+      case "wait":
+        return [];
     }
-
-    return this.state === "transitioning"
-      ? undefined
-      : { name: "ignore" };
   }
 
-  startNextDayTransition(): void {
+  startEndDayTransition(): void {
+    this.state = "transitioning";
     this.tweens.add({
       targets: this.transitionOverlay,
       alpha: { from: 0, to: 1 },
       ease: "Sin.easeOut",
-      duration: 2000,
-      yoyo: true,
-      onYoyo: () => this.nightBackground.alpha = 1,
-      onComplete: () => this.state = "day"
-    })
+      duration: 1000,
+      onComplete: () => this.state = "wait"
+    });
+  }
+
+  startStartDayTransition(): void {
+    this.state = "transitioning";
+    this.nightBackground.alpha = 1;
+    this.tweens.add({
+      targets: this.transitionOverlay,
+      alpha: { from: 1, to: 0 },
+      ease: "Sin.easeIn",
+      duration: 1000,
+      onComplete: () => this.state = "wait"
+    });
   }
 }

@@ -1,21 +1,30 @@
-import { AgentState, AgentStrategy, StateDetails } from "../state/Agent";
+import { AgentStrategy, StateDetails, StateReport } from "../state/Agent";
 
 export default class Time implements AgentStrategy {
   private day = 0;
-  private minute = 0;
+  private minute = -1;
+  private startedDay = false;
 
-  tell(report: AgentState): void {
+  tell(report: StateReport): void {
     // TODO advance time based on observed actions
   }
-  tick(): StateDetails | undefined {
+  tick(): StateDetails[] | undefined {
+    if (!this.startedDay) {
+      this.startedDay = true;
+      return [{ name: "dayStart", day: this.day }]
+
+    }
+
     this.minute++;
     if (this.minute == 120) {
       this.day++;
-      this.minute = 0;
-      return { name: "dayOver" }
+      this.minute = -1;
+      this.startedDay = false;
+
+      return [{ name: "dayOver" }]
     }
 
-    return { name: "gameTime", day: this.day, minute: this.minute };
+    return [{ name: "gameTime", day: this.day, minute: this.minute }];
   }
 
 }
