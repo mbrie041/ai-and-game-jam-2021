@@ -75,7 +75,7 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
     this.isShowingDialog = true;
     this.avatar.setTexture(next[0].icon ?? "");
     this.avatar.visible = next[0].icon !== null;
-    this.close.once("pointerup", () => this.closeDialog());
+    this.close.once(Phaser.Input.Events.POINTER_DOWN, () => this.closeDialog());
 
     this.title.setText(next[0].name);
 
@@ -96,7 +96,7 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
     this.tweens.add({
       targets: this.cameras.main,
       y: { from: -500, to: 0 },
-      duration: 500,
+      duration: 800,
       ease: Phaser.Math.Easing.Bounce.Out
     })
   }

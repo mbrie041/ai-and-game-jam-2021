@@ -4,7 +4,9 @@ export {
   AgentStrategy,
   StateDetails,
   GameTime,
-  CharacterDialog
+  CharacterDialog,
+  Waiting,
+  ContextSpecificAction
 };
 
 type StateReport = {
@@ -12,13 +14,36 @@ type StateReport = {
   state: StateDetails
 }
 
+/** Game clock update. */
 type GameTime = { name: "gameTime", day: number, minute: number }
+
+/** An event to show a speech/action dialog. */
 type CharacterDialog = { name: "dialog", message: string | null, action: string | null }
+
+/** 
+ * Some NPC agents may offer specific actions for the player to perform. This type is 
+ * used to encode those actions. */
+type ContextSpecificAction = {
+  name: "contextAction",
+  target: Agent,
+  action: string
+}
+
+/** Message to indicate an NPC is waiting  */
+type Waiting = {
+  name: "waiting",
+
+  /** A brief description of how the player perceives the NPC right now */
+  appearance: string
+
+  /** a list of 0 or more context specific actions, in addition to standard actions. */
+  actions: ContextSpecificAction[]
+}
 
 type StateDetails =
   { name: "dayOver" } |
   { name: "dayStart", day: number } |
-  { name: "wantsAttention" } |
+  Waiting |
   GameTime |
   CharacterDialog;
 

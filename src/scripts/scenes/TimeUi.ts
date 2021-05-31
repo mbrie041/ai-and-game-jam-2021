@@ -83,7 +83,7 @@ export default class TimeUi extends Phaser.Scene implements AgentStrategy {
     this.tweens.add({
       targets: this.cameras.main,
       y: { from: -100, to: 0 },
-      duration: 500,
+      duration: 800,
       ease: Phaser.Math.Easing.Bounce.Out
     })
   }
