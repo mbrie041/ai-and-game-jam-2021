@@ -1,8 +1,10 @@
 import { FontDefaults } from "../Styles";
 import Images from "../Images";
-import { AgentStrategy, GameTime, StateDetails, StateReport } from "../state/Agent";
+import { Agent, GameTime, StateDetails, StateReport } from "../state/Agent";
 
-export default class TimeUi extends Phaser.Scene implements AgentStrategy {
+export default class TimeUi extends Phaser.Scene implements Agent {
+  icon = null;
+  name = "time-ui";
   private days = ["Friday", "Saturday", "Sunday"];
   private day = "";
   private pauseGame = false;

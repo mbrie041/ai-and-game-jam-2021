@@ -1,9 +1,12 @@
 import Images from "../Images";
-import { Agent, AgentStrategy, ContextlessOption, StateDetails, StateReport, Waiting } from "../state/Agent";
+import { Agent, ContextlessOption, StateDetails, StateReport, Waiting } from "../state/Agent";
 import { ClickCursor, FontDefaults, Interactive } from "../Styles";
 
 const contextlessOptions: ContextlessOption[] = ["Chat", "Let Pass", "Search", "Arrest"];
-export default class PlayerInterface extends Phaser.Scene implements AgentStrategy {
+export default class PlayerInterface extends Phaser.Scene implements Agent {
+  icon = null;
+  name = "player-ui";
+
   private nextAction: StateDetails | undefined;
   private currentlyWaiting: (Waiting & { agent: Agent })[] = [];
   private waiterTextboxes: Phaser.GameObjects.Text[] = [];

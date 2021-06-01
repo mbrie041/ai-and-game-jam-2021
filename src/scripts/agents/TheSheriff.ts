@@ -1,6 +1,9 @@
-import { AgentStrategy, CharacterDialog, StateDetails, StateReport } from "../state/Agent";
+import Images from "../Images";
+import { Agent, CharacterDialog, StateDetails, StateReport } from "../state/Agent";
 
-export default class SheriffStrategy implements AgentStrategy {
+export default class Sheriff implements Agent {
+  icon = Images.Characters.Sheriff.key;
+  name = "The Sheriff";
   private messages: string[] = [];
   tell(report: StateReport): void {
     if (report.state.name === "dayStart") {

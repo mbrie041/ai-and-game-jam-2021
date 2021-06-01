@@ -1,8 +1,11 @@
 import Images from "../Images";
 import { ClickCursor, FontDefaults, Interactive } from "../Styles";
-import { Agent, AgentStrategy, CharacterDialog, StateDetails, StateReport } from "../state/Agent";
+import { Agent, CharacterDialog, StateDetails, StateReport } from "../state/Agent";
 
-export default class Dialog extends Phaser.Scene implements AgentStrategy {
+export default class Dialog extends Phaser.Scene implements Agent {
+  icon = null;
+  name = "dialog-ui";
+
   private pendingDialogs: [agent: Agent, dialog: CharacterDialog][] = [];
   private isShowingDialog = false;
   private avatar: Phaser.GameObjects.Image;

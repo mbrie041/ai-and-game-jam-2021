@@ -1,8 +1,6 @@
-import SheriffStrategy from "../agents/TheSheriff";
+import Sheriff from "../agents/TheSheriff";
 import TaxCollector from "../agents/TheTaxCollector";
 import Time from "../agents/Time";
-import Images from "../Images";
-import { Agent } from "../state/Agent";
 import Scenario from "../state/Scenario";
 import Background from "./Background";
 import Dialog from "./Dialog";
@@ -25,13 +23,13 @@ export default class Main extends Phaser.Scene {
     const playerUi = this.scene.add("player-ui", PlayerInterface, true) as PlayerInterface;
 
     this.scenario = new Scenario([
-      new Agent("time-keeper", new Time()),
-      new Agent("background", background),
-      new Agent("The Sheriff", new SheriffStrategy(), Images.Characters.Sheriff.key),
-      new Agent("Andrew, the tax man", new TaxCollector(), Images.Characters.TaxCollector.key),
-      new Agent("time-ui", timeUi),
-      new Agent("dialog-ui", dialogUi),
-      new Agent("player-ui", playerUi)
+      new Time(),
+      background,
+      new Sheriff(),
+      new TaxCollector(),
+      timeUi,
+      dialogUi,
+      playerUi
     ]);
   }
 

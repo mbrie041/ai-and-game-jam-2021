@@ -1,7 +1,11 @@
-import { Agent, AgentStrategy, StateDetails, StateReport } from "../state/Agent";
+import Images from "../Images";
+import { Agent, StateDetails, StateReport } from "../state/Agent";
 import * as BT from "../state/BehaviourTree";
 
-export default class TaxCollector implements AgentStrategy {
+export default class TaxCollector implements Agent {
+  icon = Images.Characters.TaxCollector.key;
+  name = "Andrew, the Tax Collector";
+
   private dayStarted = false;
   private talked = 0;
 
@@ -23,7 +27,7 @@ export default class TaxCollector implements AgentStrategy {
     }
   }
 
-  tick(thisAgent: Agent): StateDetails[] | undefined {
+  tick(): StateDetails[] | undefined {
     const currentActions = this.behaviour.next();
 
     return currentActions.done

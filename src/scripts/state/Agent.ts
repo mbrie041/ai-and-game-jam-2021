@@ -1,7 +1,6 @@
 export {
   Agent,
   StateReport,
-  AgentStrategy,
   StateDetails,
   GameTime,
   CharacterDialog,
@@ -62,39 +61,21 @@ type StateDetails =
   ContextlessAction |
   ContextSpecificAction;
 
+/**
+ * An agent is an object that plays a role in the game, including NPCs, the player, and the time 
+ * updater.
+ */
+interface Agent {
+  readonly icon: string | null;
+  readonly name: string;
 
-interface AgentStrategy {
   /** Informs the strategy of an event that occurred. */
-  tell(report: StateReport, thisAgent: Agent): void;
+  tell(state: StateReport): void;
 
   /** 
    * Act upon events received since the last tick. If the agent cannot act yet, this method will
    * return undefined. This will be used for interactive agents (ie. player, transition causing
    * agents).
    * */
-  tick(thisAgent: Agent): StateDetails[] | undefined;
-}
-
-/**
- * An agent is an object that plays a role in the game, including NPCs, the player, and the time 
- * updater. Most of an agent's behaviour is delegated to its strategy implementation.
- */
-class Agent {
-  readonly icon: string | null;
-  readonly name: string;
-  private readonly strategy: AgentStrategy;
-
-  constructor(name: string, strategy: AgentStrategy, icon?: string) {
-    this.name = name;
-    this.icon = icon ?? null;
-    this.strategy = strategy;
-  }
-
-  tell(state: StateReport): void {
-    this.strategy.tell(state, this);
-  }
-
-  tick(): StateDetails[] | undefined {
-    return this.strategy.tick(this);
-  }
+  tick(): StateDetails[] | undefined;
 }
