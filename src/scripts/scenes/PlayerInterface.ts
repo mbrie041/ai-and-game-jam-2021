@@ -50,10 +50,10 @@ export default class PlayerInterface extends Phaser.Scene implements Agent {
 
   create(): void {
     this.waiterBox = this.add
-      .image(0, -500, Images.Dialog.NarrowTall.key)
+      .image(0, 800, Images.Dialog.NarrowTall.key)
       .setOrigin(0, 0);
     this.waiterTitle = this.add
-      .text(28, 24 - 500, "Waiting", { ...FontDefaults, fontStyle: 'bold' })
+      .text(28, 24 + 800, "Waiting", { ...FontDefaults, fontStyle: 'bold' })
       .setOrigin(0, 0);
 
     this.visitorAvatar = this.add
@@ -70,7 +70,7 @@ export default class PlayerInterface extends Phaser.Scene implements Agent {
       })
       .setOrigin(0, 0);
 
-    this.visitorDetailsContainer = this.add.container(0, 800);
+    this.visitorDetailsContainer = this.add.container(0, -400);
     this.visitorDetailsContainer.add(this.add
       .image(0, 0, Images.Dialog.WideTall.key)
       .setOrigin(0, 0))
@@ -82,7 +82,7 @@ export default class PlayerInterface extends Phaser.Scene implements Agent {
   showList(): void {
     this.isShowingList = true;
     const x = 28;
-    let y = 56 - 500;
+    let y = 56 + 800;
 
     for (const item of this.currentlyWaiting) {
       const text = this.add
@@ -96,17 +96,17 @@ export default class PlayerInterface extends Phaser.Scene implements Agent {
 
     this.tweens.add({
       targets: [...this.waiterTextboxes, this.waiterBox, this.waiterTitle],
-      y: '+=500',
+      y: '-=368',
       duration: 300,
       ease: Phaser.Math.Easing.Back.Out
     })
   }
 
   clicked(item: Waiting & { agent: Agent; }): void {
-    if (this.visitorDetailsContainer.y < this.cameras.main.height) {
+    if (this.visitorDetailsContainer.y > 0) {
       this.tweens.add({
         targets: this.visitorDetailsContainer,
-        y: { from: 388, to: 800 },
+        y: { from: 0, to: -400 },
         duration: 200,
         ease: Phaser.Math.Easing.Back.In,
         onComplete: () => this.clicked(item)
@@ -165,7 +165,7 @@ export default class PlayerInterface extends Phaser.Scene implements Agent {
 
     this.tweens.add({
       targets: this.visitorDetailsContainer,
-      y: { from: 800, to: 388 },
+      y: { from: -400, to: 0 },
       duration: 300,
       ease: Phaser.Math.Easing.Back.Out
     })
@@ -176,13 +176,13 @@ export default class PlayerInterface extends Phaser.Scene implements Agent {
 
     this.tweens.add({
       targets: this.visitorDetailsContainer,
-      y: { from: 388, to: 800 },
+      y: { from: 0, to: -400 },
       duration: 200,
       ease: Phaser.Math.Easing.Back.In
     })
     this.tweens.add({
       targets: [...this.waiterTextboxes, this.waiterBox, this.waiterTitle],
-      y: '+=-500',
+      y: '+=368',
       duration: 200,
       ease: Phaser.Math.Easing.Back.In,
       onComplete: () => this.cleanUpList()
