@@ -6,7 +6,9 @@ export {
   selector,
   sequence,
   tell,
-  waitFor
+  until,
+  waitFor,
+  withSideEffect,
 }
 
 type BTree = Generator<StateDetails[], ["succeed" | "fail", StateDetails[]]>
@@ -82,10 +84,29 @@ function* tell(tell: StateDetails[]): BTree {
   return ["succeed", tell];
 }
 
+function* withSideEffect(sideEffect: () => void, subTree: BTree): BTree {
+  sideEffect();
+  return yield* subTree;
+}
+
 function* waitFor(condition: () => boolean, subTree: BTree): BTree {
   while (!condition()) {
     yield [];
   }
 
   return yield* subTree;
+}
+
+function* until(condition: () => boolean, subTree: () => BTree): BTree {
+  while (!condition()) {
+    const result = yield* subTree();
+
+    if (result[0] === "fail") {
+      return result;
+    }
+
+    yield result[1];
+  }
+
+  return ["succeed", []];
 }

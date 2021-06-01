@@ -7,7 +7,8 @@ export {
   Waiting,
   ContextlessAction,
   ContextSpecificAction,
-  ContextlessOption
+  ContextlessOption,
+  waiting
 };
 
 type StateReport = {
@@ -49,7 +50,7 @@ type Waiting = {
   appearance: string
 
   /** a list of 0 or more context specific actions, in addition to standard actions. */
-  actions: { label: string, action: string }[]
+  actions: ContextSpecificAction[]
 }
 
 type StateDetails =
@@ -60,6 +61,10 @@ type StateDetails =
   CharacterDialog |
   ContextlessAction |
   ContextSpecificAction;
+
+function waiting(appearance: string, actions: ContextSpecificAction[] = []): StateDetails {
+  return { name: "waiting", appearance, actions };
+}
 
 /**
  * An agent is an object that plays a role in the game, including NPCs, the player, and the time 

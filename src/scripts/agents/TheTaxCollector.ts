@@ -1,5 +1,5 @@
 import Images from "../Images";
-import { Agent, StateDetails, StateReport } from "../state/Agent";
+import { Agent, StateDetails, StateReport, waiting } from "../state/Agent";
 import * as BT from "../state/BehaviourTree";
 
 export default class TaxCollector implements Agent {
@@ -8,21 +8,29 @@ export default class TaxCollector implements Agent {
 
   private dayStarted = false;
   private talked = 0;
+  private frustration = 0;
 
-  private waitingInitial: StateDetails[] =
-    [{ name: "waiting", appearance: "A well dressed man taps his foot impatiently.", actions: [] }];
+  private waitingInitial = [waiting("A well dressed man glowers with his arms crossed.")];
+  private waitingAnnoyed = [waiting("A well dressed man taps his foot impatiently.")];
 
   private behaviour = BT.waitFor(
     () => this.dayStarted,
     BT.inParallelUntilAny(
-      BT.loop(() => BT.tell(this.waitingInitial))
-    ));
+      BT.sequence(
+        BT.until(() => this.frustration > 0, () => BT.tell(this.waitingInitial)),
+        BT.loop(() => BT.tell(this.waitingAnnoyed)))));
 
 
   tell(report: StateReport): void {
     switch (report.state.name) {
-      case "dayStart":
+      case "dayOver":
+        this.dayStarted = false;
+        break;
+      case "gameTime":
         this.dayStarted = true;
+        if (report.state.minute > 5) {
+          this.frustration |= 1;
+        }
         break;
     }
   }
