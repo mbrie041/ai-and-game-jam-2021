@@ -84,16 +84,16 @@ export default class Dialog extends Phaser.Scene implements Agent {
 
     if (next[1].message) {
       this.content.setText(`“${next[1].message}”`);
-      this.action.setY(this.content.y + this.content.height + 10)
     } else {
       this.content.setText("");
-      this.action.setY(this.content.y)
     }
 
     if (next[1].action) {
       this.action.setText(`${next[1].action}`);
+      this.content.setY(this.action.y + this.action.height + 10)
     } else {
       this.action.setText("");
+      this.content.setY(this.action.y)
     }
 
     this.tweens.add({

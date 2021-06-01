@@ -59,15 +59,20 @@ export default class PlayerInterface extends Phaser.Scene implements Agent {
 
   tick(): StateDetails[] | undefined {
     for (const sprite in this.sprites) {
-      this.sprites[sprite].setVisible(false);
-    }
+      if (this.currentlyWaiting.find(x => x.agent.name === sprite) === undefined) {
+        if (this.sprites[sprite].alpha === 1) {
+          this.tweens.add({
+            targets: this.sprites[sprite],
+            alpha: { from: 1, to: 0 },
+            ease: Phaser.Math.Easing.Expo.Out,
+            duration: 500
+          })
+        } else {
+          this.sprites[sprite].setVisible(true);
+        }
 
-    for (const waiting of this.currentlyWaiting) {
-      if (waiting.agent.name in this.sprites) {
-        this.sprites[waiting.agent.name].setVisible(true);
       }
     }
-
 
     if (this.currentlyWaiting.length === 0) {
       return [];
@@ -108,6 +113,7 @@ export default class PlayerInterface extends Phaser.Scene implements Agent {
     this.visitorContent = this.add
       .text(28, 64, "", {
         ...FontDefaults,
+        fontStyle: 'italic',
         fontSize: '24px',
         wordWrap: { width: 428 }
       })

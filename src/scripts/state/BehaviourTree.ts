@@ -1,6 +1,7 @@
 import { StateDetails } from "./Agent"
 
 export {
+  failIf,
   inParallelUntilAny,
   loop,
   selector,
@@ -9,14 +10,18 @@ export {
   until,
   waitFor,
   withSideEffect,
+  guard
 }
 
-type BTree = Generator<StateDetails[], ["succeed" | "fail", StateDetails[]]>
+type BTree = Generator<StateDetails[], "fail" | ["succeed", StateDetails[]]>
 
 function* loop(toLoop: () => BTree): BTree {
   while (true) {
     const result = yield* toLoop();
-    yield result[1];
+
+    if (result !== "fail") {
+      yield result[1];
+    }
   }
 }
 
@@ -27,10 +32,9 @@ function* inParallelUntilAny(...trees: BTree[]): BTree {
     for (const tree of trees) {
       const result = tree.next();
 
-      // If an item is done, only report that result.
-      if (result.done) {
-        return result.value;
-      } else {
+      if (result.done && result.value !== "fail") {
+        return ["succeed", reports.concat(result.value[1])];
+      } else if (!result.done) {
         reports = reports.concat(result.value);
       }
     }
@@ -47,7 +51,7 @@ function* sequence(...trees: BTree[]): BTree {
     }
 
     const result = yield* tree;
-    if (result[0] === "fail") {
+    if (result === "fail") {
       return result;
     }
 
@@ -55,7 +59,9 @@ function* sequence(...trees: BTree[]): BTree {
       return result;
     }
 
-    yield result[1];
+    if (result[1].length > 0) {
+      yield result[1];
+    }
   }
 }
 
@@ -63,25 +69,23 @@ function* selector(...trees: BTree[]): BTree {
   while (true) {
     const tree = trees.shift();
     if (tree === undefined) {
-      return ["fail", []];
+      return "fail";
     }
 
     const result = yield* tree;
-    if (result[0] === "succeed") {
-      return result;
-    }
-
     if (trees.length === 0) {
       return result;
     }
 
-    yield result[1];
+    if (result !== "fail") {
+      return result;
+    }
   }
 }
 
 // eslint-disable-next-line require-yield
-function* tell(tell: StateDetails[]): BTree {
-  return ["succeed", tell];
+function* tell(tell: StateDetails[] | (() => StateDetails[])): BTree {
+  return ["succeed", Array.isArray(tell) ? tell : tell()];
 }
 
 function* withSideEffect(sideEffect: () => void, subTree: BTree): BTree {
@@ -101,7 +105,7 @@ function* until(condition: () => boolean, subTree: () => BTree): BTree {
   while (!condition()) {
     const result = yield* subTree();
 
-    if (result[0] === "fail") {
+    if (result === "fail") {
       return result;
     }
 
@@ -109,4 +113,20 @@ function* until(condition: () => boolean, subTree: () => BTree): BTree {
   }
 
   return ["succeed", []];
+}
+
+function* failIf(condition: () => boolean): BTree {
+  while (!condition()) {
+    yield [];
+  }
+
+  return "fail";
+}
+
+function* guard(condition: () => boolean, subtree: BTree): BTree {
+  if (condition()) {
+    return yield* subtree;
+  }
+
+  return "fail";
 }

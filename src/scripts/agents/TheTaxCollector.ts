@@ -1,5 +1,5 @@
 import Images from "../Images";
-import { Agent, StateDetails, StateReport, waiting } from "../state/Agent";
+import { Agent, ContextlessOption, StateDetails, StateReport, waiting } from "../state/Agent";
 import * as BT from "../state/BehaviourTree";
 
 export default class TaxCollector implements Agent {
@@ -7,18 +7,71 @@ export default class TaxCollector implements Agent {
   name = "Andrew, the Tax Collector";
 
   private dayStarted = false;
-  private talked = 0;
+  private actions: { [id: string]: boolean } = {};
   private frustration = 0;
 
   private waitingInitial = [waiting("A well dressed man glowers with his arms crossed.")];
   private waitingAnnoyed = [waiting("A well dressed man taps his foot impatiently.")];
 
+  respondToFirstChat(): StateDetails[] {
+    return [{
+      name: "dialog",
+      action: "You greet the man, \"Morning sir, what brings you to Nottingham?\"",
+      message: this.frustration < 1
+        ? "I'm a tax collector for the NTA, here to collect taxes for the Good Prince John."
+        : "I'm here about the king's business and you are wasting my time!"
+    }]
+  }
+
+  respondToSecondChat(): StateDetails[] {
+    return [{
+      name: "dialog",
+      action: "You explain, \"the sheriff is concerned about outlaws, so everyone is getting checked at the gates until the festival is over.\"",
+      message: "And as she could tell you, I am no outlaw, but you are wasting my time!"
+    }]
+  }
+
+  respondToThirdChat(): StateDetails[] {
+    return [{
+      name: "dialog",
+      action: "\"…\"",
+      message: "No, I'm done speaking with you, let me pass!"
+    }]
+  }
+
+  arrestResponse(): StateDetails[] {
+    return [{
+      name: "dialog",
+      action: "You take out your manacles, \"sir, you are under arrest.\" He rants angrily as you lead him away.",
+      message: "WHAT? This is ridiculous! I demand to speak to the sheriff!"
+    }]
+  }
+
   private behaviour = BT.waitFor(
     () => this.dayStarted,
-    BT.inParallelUntilAny(
-      BT.sequence(
-        BT.until(() => this.frustration > 0, () => BT.tell(this.waitingInitial)),
-        BT.loop(() => BT.tell(this.waitingAnnoyed)))));
+    BT.selector(
+      BT.inParallelUntilAny(
+        BT.waitFor(
+          () => this.actions["Arrest"],
+          BT.tell(this.arrestResponse())
+        ),
+        BT.sequence(
+          BT.waitFor(
+            () => this.actions["Chatted"],
+            BT.tell(() => this.respondToFirstChat())),
+          BT.waitFor(
+            () => this.actions["Chatted"],
+            BT.tell(() => this.respondToSecondChat())),
+          BT.loop(() => BT.waitFor(
+            () => this.actions["Chatted"],
+            BT.tell(() => this.respondToThirdChat())))),
+        BT.sequence(
+          BT.until(
+            () => this.frustration > 0,
+            () => BT.tell(this.waitingInitial)),
+          BT.loop(() => BT.tell(this.waitingAnnoyed))))
+
+    ));
 
 
   tell(report: StateReport): void {
@@ -32,15 +85,23 @@ export default class TaxCollector implements Agent {
           this.frustration |= 1;
         }
         break;
+      case "contextlessAction":
+        if (report.state.target == this) {
+          this.actions[report.state.action] = true;
+        }
+        break;
     }
   }
 
   tick(): StateDetails[] | undefined {
     const currentActions = this.behaviour.next();
 
-    return currentActions.done
-      ? currentActions.value[1]
-      : currentActions.value
+    this.actions = {};
+
+    return !currentActions.done
+      ? currentActions.value
+      // if next is called multiple times after done, subsequent results are undefined.
+      : Array.isArray(currentActions.value) ? currentActions.value[1] : []
   }
 
 }
