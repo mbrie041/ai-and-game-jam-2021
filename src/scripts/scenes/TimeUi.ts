@@ -9,8 +9,10 @@ export default class TimeUi extends Phaser.Scene implements Agent {
   private day = "";
   private pauseGame = false;
   private nextAction: StateDetails | undefined;
+  private lastTime: GameTime | undefined;
 
   timeText: Phaser.GameObjects.Text;
+
   tell(report: StateReport): void {
     switch (report.state.name) {
       case "dayStart":
@@ -58,9 +60,14 @@ export default class TimeUi extends Phaser.Scene implements Agent {
   }
 
   private updateClockTime(state: GameTime) {
+    if (this.lastTime && this.lastTime.day === state.day && this.lastTime.minute === state.minute) {
+      return;
+    }
+
     const hour = 6 + Math.floor(state.minute / 60);
     const minute = state.minute % 60;
     this.updateTime(`${this.day}, ${hour}:${minute.toFixed(0).padStart(2, "0")}am`);
+    this.lastTime = state;
   }
 
   private updateTime(nextTime: string): void {

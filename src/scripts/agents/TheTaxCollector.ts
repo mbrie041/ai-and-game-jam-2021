@@ -1,5 +1,5 @@
 import Images from "../Images";
-import { Agent, ContextlessOption, StateDetails, StateReport, waiting } from "../state/Agent";
+import { Agent, StateDetails, StateReport, waiting } from "../state/Agent";
 import * as BT from "../state/BehaviourTree";
 
 export default class TaxCollector implements Agent {
@@ -18,7 +18,7 @@ export default class TaxCollector implements Agent {
       name: "dialog",
       action: "You greet the man, \"Morning sir, what brings you to Nottingham?\"",
       message: this.frustration < 1
-        ? "I'm a tax collector for the NTA, here to collect taxes for the Good Prince John."
+        ? "I'm a tax collector for the NTA, here to collect taxes for the Good Prince John. What's the hold up?"
         : "I'm here about the king's business and you are wasting my time!"
     }]
   }
@@ -57,13 +57,13 @@ export default class TaxCollector implements Agent {
         ),
         BT.sequence(
           BT.waitFor(
-            () => this.actions["Chatted"],
+            () => this.actions["Chat"],
             BT.tell(() => this.respondToFirstChat())),
           BT.waitFor(
-            () => this.actions["Chatted"],
+            () => this.actions["Chat"],
             BT.tell(() => this.respondToSecondChat())),
           BT.loop(() => BT.waitFor(
-            () => this.actions["Chatted"],
+            () => this.actions["Chat"],
             BT.tell(() => this.respondToThirdChat())))),
         BT.sequence(
           BT.until(

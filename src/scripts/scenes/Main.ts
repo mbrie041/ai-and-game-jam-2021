@@ -23,12 +23,12 @@ export default class Main extends Phaser.Scene {
     const playerUi = this.scene.add("player-ui", PlayerInterface, true) as PlayerInterface;
 
     this.scenario = new Scenario([
-      new Time(),
       background,
       new Sheriff(),
       new TaxCollector(),
-      timeUi,
       dialogUi,
+      new Time(),
+      timeUi,
       playerUi
     ]);
   }
