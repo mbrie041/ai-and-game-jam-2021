@@ -7,6 +7,9 @@ export default class PlayerInterface extends Phaser.Scene implements Agent {
   icon = null;
   name = "player-ui";
 
+  private waitPositions = [[1044, 446], [976, 234], [892, 480], [790, 268], [740, 430], [636, 264]]
+  private sprites: { [id: string]: Phaser.GameObjects.Image } = {}
+
   private nextAction: StateDetails | undefined;
   private currentlyWaiting: (Waiting & { agent: Agent })[] = [];
   private waiterTextboxes: Phaser.GameObjects.Text[] = [];
@@ -22,10 +25,50 @@ export default class PlayerInterface extends Phaser.Scene implements Agent {
   tell(report: StateReport): void {
     if (report.state.name === "waiting") {
       this.currentlyWaiting.push({ agent: report.source, ...report.state })
+      if (!(report.source.name in this.sprites)) {
+        const pos = this.waitPositions.pop();
+        if (pos) {
+          const newSprite = this.add
+            .image(1300, 360, report.source.icon ?? "")
+            .setDisplaySize(120, 120);
+          this.tweens.add({
+            targets: newSprite,
+            x: { from: 1300, to: pos[0] },
+            y: { from: 360, to: pos[1] },
+            duration: 5000
+          })
+          this.tweens.add({
+            targets: newSprite,
+            angle: { from: 5, to: -5 },
+            duration: 125,
+            yoyo: true,
+            loop: 18,
+            onComplete: () => this.tweens.add({
+              targets: newSprite,
+              angle: { from: 5, to: 0 },
+              duration: 62,
+            })
+          });
+          this.sprites[report.source.name] = newSprite;
+        } else {
+          console.log("Could not show sprite, no positions left");
+        }
+      }
     }
   }
 
   tick(): StateDetails[] | undefined {
+    for (const sprite in this.sprites) {
+      this.sprites[sprite].setVisible(false);
+    }
+
+    for (const waiting of this.currentlyWaiting) {
+      if (waiting.agent.name in this.sprites) {
+        this.sprites[waiting.agent.name].setVisible(true);
+      }
+    }
+
+
     if (this.currentlyWaiting.length === 0) {
       return [];
     }
