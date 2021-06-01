@@ -8,6 +8,7 @@ export {
   ContextlessAction,
   ContextSpecificAction,
   ContextlessOption,
+  dialog,
   waiting
 };
 
@@ -54,6 +55,7 @@ type Waiting = {
 }
 
 type StateDetails =
+  { name: "gameOver" } |
   { name: "dayOver" } |
   { name: "dayStart", day: number } |
   Waiting |
@@ -61,6 +63,10 @@ type StateDetails =
   CharacterDialog |
   ContextlessAction |
   ContextSpecificAction;
+
+function dialog(message: string, action: string | null = null): CharacterDialog {
+  return { name: "dialog", message, action };
+}
 
 function waiting(appearance: string, actions: ContextSpecificAction[] = []): StateDetails {
   return { name: "waiting", appearance, actions };
@@ -75,7 +81,7 @@ interface Agent {
   readonly name: string;
 
   /** Informs the strategy of an event that occurred. */
-  tell(state: StateReport): void;
+  tell(report: StateReport): void;
 
   /** 
    * Act upon events received since the last tick. If the agent cannot act yet, this method will

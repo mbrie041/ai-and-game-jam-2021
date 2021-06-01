@@ -25,7 +25,7 @@ export default class Dialog extends Phaser.Scene implements Agent {
       return undefined;
     }
 
-    const next = this.pendingDialogs.pop();
+    const next = this.pendingDialogs.shift();
     if (next === undefined) {
       return []
     }
