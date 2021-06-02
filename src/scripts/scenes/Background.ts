@@ -1,7 +1,9 @@
 import Images from "../Images";
-import { AgentStrategy, StateDetails, StateReport } from "../state/Agent";
+import { Agent, StateDetails, StateReport } from "../state/Agent";
 
-export default class Background extends Phaser.Scene implements AgentStrategy {
+export default class Background extends Phaser.Scene implements Agent {
+  icon = null;
+  name = "background-ui";
   private state: "wait" | "dayOver" | "dayStart" | "transitioning" = "wait";
   private transitionOverlay: Phaser.GameObjects.Rectangle;
   private gameTime: { day: number; minute: number; } | undefined;

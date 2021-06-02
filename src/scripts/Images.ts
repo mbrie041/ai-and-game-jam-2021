@@ -9,7 +9,8 @@ const Images = {
     NarrowTall: { key: "dialog_narrow_tall", url: "assets/images/dialog-narrow-tall.png" }
   },
   Characters: {
-    Sheriff: { key: "npc_sheriff", url: "assets/images/npc-sheriff.png" }
+    Sheriff: { key: "npc_sheriff", url: "assets/images/Characters/Sheriff.png" },
+    TaxCollector: { key: "npc_taxCollector", url: "assets/images/Characters/TaxCollector.png" },
   }
 }
 

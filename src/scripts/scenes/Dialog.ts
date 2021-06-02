@@ -1,8 +1,11 @@
 import Images from "../Images";
 import { ClickCursor, FontDefaults, Interactive } from "../Styles";
-import { Agent, AgentStrategy, CharacterDialog, StateDetails, StateReport } from "../state/Agent";
+import { Agent, CharacterDialog, StateDetails, StateReport } from "../state/Agent";
 
-export default class Dialog extends Phaser.Scene implements AgentStrategy {
+export default class Dialog extends Phaser.Scene implements Agent {
+  icon = null;
+  name = "dialog-ui";
+
   private pendingDialogs: [agent: Agent, dialog: CharacterDialog][] = [];
   private isShowingDialog = false;
   private avatar: Phaser.GameObjects.Image;
@@ -22,7 +25,7 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
       return undefined;
     }
 
-    const next = this.pendingDialogs.pop();
+    const next = this.pendingDialogs.shift();
     if (next === undefined) {
       return []
     }
@@ -63,9 +66,8 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
       .setOrigin(0, 0);
 
     this.avatar = this.add
-      .image(0, 4, "")
-      .setOrigin(0, 0)
-      .setScale(0.5);
+      .image(0, 2, "")
+      .setOrigin(0, 0);
 
     this.cameras.main.y = -500;
   }
@@ -75,27 +77,28 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
     this.isShowingDialog = true;
     this.avatar.setTexture(next[0].icon ?? "");
     this.avatar.visible = next[0].icon !== null;
+    this.avatar.setDisplaySize(60, 60);
     this.close.once(Phaser.Input.Events.POINTER_DOWN, () => this.closeDialog());
 
     this.title.setText(next[0].name);
 
     if (next[1].message) {
       this.content.setText(`“${next[1].message}”`);
-      this.action.setY(this.content.y + this.content.height + 10)
     } else {
       this.content.setText("");
-      this.action.setY(this.content.y)
     }
 
     if (next[1].action) {
       this.action.setText(`${next[1].action}`);
+      this.content.setY(this.action.y + this.action.height + 10)
     } else {
       this.action.setText("");
+      this.content.setY(this.action.y)
     }
 
     this.tweens.add({
       targets: this.cameras.main,
-      y: { from: -500, to: 0 },
+      y: { from: -400, to: 0 },
       duration: 300,
       ease: Phaser.Math.Easing.Back.Out
     })
@@ -104,7 +107,7 @@ export default class Dialog extends Phaser.Scene implements AgentStrategy {
   closeDialog(): void {
     this.tweens.add({
       targets: this.cameras.main,
-      y: { from: 0, to: -500 },
+      y: { from: 0, to: -400 },
       duration: 200,
       ease: Phaser.Math.Easing.Back.In,
       onComplete: () => this.isShowingDialog = false
