@@ -73,16 +73,17 @@ export default class TaxCollector implements Agent {
           BT.loop(() => BT.waitFor(
             () => this.actions["Chat"],
             BT.tell(() => this.respondToThirdChat())))),
+        //I need to write the sequence here for let pass
+        BT.waitFor(
+          () => this.actions["Let Pass"],
+          BT.tell(this.passResponse())
+        ),
         BT.sequence(
           BT.until(
             () => this.frustration > 0,
             () => BT.tell(this.waitingInitial)),
           BT.loop(() => BT.tell(this.waitingAnnoyed))),
-        BT.waitFor(
-            () => this.actions["Let Pass"],
-            BT.tell(this.passResponse())
-          //I need to write the sequence here for let pass
-          )
+
     )));
 
 

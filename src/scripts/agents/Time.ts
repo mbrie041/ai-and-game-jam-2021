@@ -17,6 +17,10 @@ export default class Time implements Agent {
         switch (report.state.action) {
           case "Arrest":
             this.minute += 10;
+            break;
+          default: 
+            this.minute += 1;
+            break;
         }
     }
   }
