@@ -13,9 +13,13 @@ export default class Time implements Agent {
       case "waiting":
         this.waitingCount++;
         break;
+        
       case "contextlessAction":
         switch (report.state.action) {
           case "Arrest":
+            this.minute += 10;
+            break;
+          case "Search":
             this.minute += 10;
             break;
           default: 

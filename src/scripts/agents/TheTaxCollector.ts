@@ -54,6 +54,20 @@ export default class TaxCollector implements Agent {
       message: "Thank you. I will."
     }]
   }
+  searchResponse(): StateDetails[] {
+    return [{
+      name: "dialog",
+      action: "You search the Tax Collector, \"Search text\" He opens his bags.",
+      message: "This is the tax collectors response."
+    }]
+  }
+  repeatSearchResponse(): StateDetails[] {
+    return [{
+      name: "dialog",
+      action: "You try to search the Tax Collector again, \"Search text\" He opens his bags.",
+      message: "You've already searched me. Stop wasting my team."
+    }]
+  }
 
   private behaviour = BT.waitFor(
     () => this.dayStarted,
@@ -78,13 +92,22 @@ export default class TaxCollector implements Agent {
           () => this.actions["Let Pass"],
           BT.tell(this.passResponse())
         ),
+        //I need to write the sequence here for search
+        BT.sequence(
+          BT.waitFor(
+            () => this.actions["Search"],
+            BT.tell(this.searchResponse())),
+          BT.loop(() =>  BT.waitFor(
+            () => this.actions["Search"],
+            BT.tell(this.repeatSearchResponse()))),
+        ),
         BT.sequence(
           BT.until(
             () => this.frustration > 0,
             () => BT.tell(this.waitingInitial)),
           BT.loop(() => BT.tell(this.waitingAnnoyed))),
 
-    )));
+      )));
 
 
   tell(report: StateReport): void {
