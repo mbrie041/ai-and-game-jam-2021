@@ -47,6 +47,14 @@ export default class TaxCollector implements Agent {
     }]
   }
 
+  passResponse(): StateDetails[] {
+    return [{
+      name: "dialog",
+      action: "You wave the Tax Collector through, \"Enjoy your stay in Nottingham\" He nods as he passes.",
+      message: "Thank you. I will."
+    }]
+  }
+
   private behaviour = BT.waitFor(
     () => this.dayStarted,
     BT.selector(
@@ -69,9 +77,13 @@ export default class TaxCollector implements Agent {
           BT.until(
             () => this.frustration > 0,
             () => BT.tell(this.waitingInitial)),
-          BT.loop(() => BT.tell(this.waitingAnnoyed))))
-
-    ));
+          BT.loop(() => BT.tell(this.waitingAnnoyed))),
+        BT.waitFor(
+            () => this.actions["Let Pass"],
+            BT.tell(this.passResponse())
+          //I need to write the sequence here for let pass
+          )
+    )));
 
 
   tell(report: StateReport): void {
