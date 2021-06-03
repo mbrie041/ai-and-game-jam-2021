@@ -1,5 +1,6 @@
 import Sheriff from "../agents/TheSheriff";
 import TaxCollector from "../agents/TheTaxCollector";
+import wineMaker from "../agents/Scoundrel";
 import Time from "../agents/Time";
 import { Agent, StateDetails, StateReport } from "../state/Agent";
 import Scenario from "../state/Scenario";
@@ -44,6 +45,7 @@ export default class Main extends Phaser.Scene implements Agent {
       background,
       new Sheriff(),
       new TaxCollector(),
+      new wineMaker(),
       dialogUi,
       new Time(),
       timeUi,

@@ -11,6 +11,7 @@ const Images = {
   Characters: {
     Sheriff: { key: "npc_sheriff", url: "assets/images/Characters/Sheriff.png" },
     TaxCollector: { key: "npc_taxCollector", url: "assets/images/Characters/TaxCollector.png" },
+    WineMaker: { key: "npc_wineMaker", url: "assets/images/Characters/WineMaker.png" },
   }
 }
 
