@@ -25,6 +25,11 @@ export default class Sheriff implements Agent {
           this.endOfDayMessages.push(
             dialog("Really? Arresting the king's servants? It will be your head on a platter if he hears of this."))
         }
+        else if (report.state.action === "Arrest" && report.state.target.icon === Images.Characters.WineMaker.key) {
+          this.evaluation += 1;
+          this.endOfDayMessages.push(
+            dialog("Good Work! You caught a scoundrel."))
+        }
         break;
     }
   }

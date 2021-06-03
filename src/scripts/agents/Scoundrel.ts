@@ -2,7 +2,7 @@ import Images from "../Images";
 import { Agent, StateDetails, StateReport, waiting } from "../state/Agent";
 import * as BT from "../state/BehaviourTree";
 
-export default class wineMaker implements Agent {
+export default class WineMaker implements Agent {
   icon = Images.Characters.WineMaker.key;
   name = "Jon, the Wine Maker";
 
