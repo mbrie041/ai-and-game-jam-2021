@@ -60,7 +60,8 @@ export default class PlayerInterface extends Phaser.Scene implements Agent {
   tick(): StateDetails[] | undefined {
     for (const sprite in this.sprites) {
       if (this.currentlyWaiting.find(x => x.agent.name === sprite) === undefined) {
-        if (this.sprites[sprite].alpha === 1) {
+        if (!this.sprites[sprite].getData("done")) {
+          this.sprites[sprite].setData("done", true);
           this.tweens.add({
             targets: this.sprites[sprite],
             alpha: { from: 1, to: 0 },
